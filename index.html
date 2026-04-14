@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoneyMate – Smart Finance Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Animated BG -->
+<div class="bg-mesh">
+  <div class="mesh-orb orb-1"></div>
+  <div class="mesh-orb orb-2"></div>
+  <div class="mesh-orb orb-3"></div>
+</div>
+
+<!-- Auth Wrapper -->
+<div class="auth-wrapper">
+
+  <!-- LEFT: Branding Panel -->
+  <div class="auth-left">
+    <div class="auth-brand">
+      <div class="brand-icon-wrap"><span class="brand-emoji">💎</span></div>
+      <div class="brand-name">Money<span>Mate</span></div>
+      <div class="brand-badge">AI-Powered</div>
+    </div>
+
+    <div class="auth-tagline">
+      <h1>Your <span class="highlight">Financial Intelligence</span> Hub</h1>
+      <p>Track, analyze, and grow your wealth with AI-powered insights, goal tracking, and smart budget management.</p>
+
+      <div class="feature-list">
+        <div class="feature-item"><div class="feature-dot"></div>AI Financial Advisor Chatbot</div>
+        <div class="feature-item"><div class="feature-dot"></div>Smart Insights & Spending Analysis</div>
+        <div class="feature-item"><div class="feature-dot"></div>Savings Goal Tracker</div>
+        <div class="feature-item"><div class="feature-dot"></div>Monthly Reports & Trend Charts</div>
+        <div class="feature-item"><div class="feature-dot"></div>Daily Tracking Streak System</div>
+      </div>
+    </div>
+
+    <!-- Floating Stats Cards -->
+    <div class="float-card fc-1">
+      <div class="fc-icon">💰</div>
+      <div>
+        <div class="fc-label">Total Balance</div>
+        <div class="fc-value">₹42,500</div>
+      </div>
+    </div>
+    <div class="float-card fc-2">
+      <div class="fc-icon">🔥</div>
+      <div>
+        <div class="fc-label">Streak</div>
+        <div class="fc-value">7 Days</div>
+      </div>
+    </div>
+    <div class="float-card fc-3">
+      <div class="fc-icon">🎯</div>
+      <div>
+        <div class="fc-label">Goal Progress</div>
+        <div class="fc-value">68%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Auth Forms -->
+  <div class="auth-right">
+    <div class="auth-form-container">
+
+      <!-- LOGIN FORM -->
+      <div id="loginSection">
+        <div class="auth-form-header">
+          <h2>Welcome back 👋</h2>
+          <p>Sign in to your MoneyMate account</p>
+        </div>
+
+        <div class="alert alert-error" id="loginError"></div>
+
+        <form id="loginForm" novalidate>
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+              <input type="email" id="loginEmail" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <span class="form-error" id="loginEmailErr">Please enter a valid email.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" />
+              <button type="button" class="toggle-password" data-target="loginPassword">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <span class="form-error" id="loginPassErr">Password is required.</span>
+          </div>
+
+          <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
+        </form>
+
+        <div class="auth-toggle">
+          Don't have an account? <a href="#" id="goToSignup">Create one free →</a>
+        </div>
+
+        <div class="divider"><span>or try demo</span></div>
+        <button class="btn-demo" id="demoLoginBtn">
+          <i class="fa-solid fa-flask"></i> Use Demo Account
+        </button>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div id="signupSection" class="hidden">
+        <div class="auth-form-header">
+          <h2>Create Account ✨</h2>
+          <p>Join MoneyMate — it's completely free</p>
+        </div>
+
+        <div class="alert alert-error" id="signupError"></div>
+
+        <form id="signupForm" novalidate>
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-regular fa-user"></i></span>
+              <input type="text" id="signupName" placeholder="Gaurav Sharma" autocomplete="name" />
+            </div>
+            <span class="form-error" id="signupNameErr">Name must be at least 2 characters.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-regular fa-envelope"></i></span>
+              <input type="email" id="signupEmail" placeholder="you@example.com" autocomplete="email" />
+            </div>
+            <span class="form-error" id="signupEmailErr">Please enter a valid email.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signupPassword">Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="signupPassword" placeholder="Minimum 6 characters" autocomplete="new-password" />
+              <button type="button" class="toggle-password" data-target="signupPassword">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <span class="form-error" id="signupPassErr">Password must be at least 6 characters.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="signupConfirm">Confirm Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+              <input type="password" id="signupConfirm" placeholder="Re-enter your password" autocomplete="new-password" />
+            </div>
+            <span class="form-error" id="signupConfirmErr">Passwords do not match.</span>
+          </div>
+
+          <button type="submit" class="btn-primary" id="signupBtn">Create My Account</button>
+        </form>
+
+        <div class="auth-toggle">
+          Already have an account? <a href="#" id="goToLogin">Sign in →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

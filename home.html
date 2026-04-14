@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – MoneyMate</title>
+  <link rel="stylesheet" href="home.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader-content">
+    <div class="loader-brand">💎</div>
+    <div class="loader-title">MoneyMate</div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    <div class="loader-text">Loading your financial dashboard…</div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- App Shell -->
+<div class="app-shell" id="appShell" style="display:none;">
+
+  <!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sb-icon">💎</div>
+        <div class="sb-name">Money<span>Mate</span></div>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" title="Collapse sidebar">
+        <i class="fa-solid fa-angles-left"></i>
+      </button>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="su-avatar" id="sidebarAvatar">U</div>
+      <div class="su-info">
+        <div class="su-name" id="sidebarName">User</div>
+        <div class="su-badge">
+          <span class="streak-fire">🔥</span>
+          <span id="sidebarStreak">0</span> day streak
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Main Menu</div>
+      <a class="nav-item active" data-page="dashboard" href="#">
+        <span class="nav-icon"><i class="fa-solid fa-house"></i></span>
+        <span class="nav-text">Dashboard</span>
+      </a>
+      <a class="nav-item" data-page="transactions" href="#">
+        <span class="nav-icon"><i class="fa-solid fa-list-ul"></i></span>
+        <span class="nav-text">Transactions</span>
+      </a>
+      <a class="nav-item" data-page="reports" href="#">
+        <span class="nav-icon"><i class="fa-solid fa-chart-bar"></i></span>
+        <span class="nav-text">Reports</span>
+      </a>
+      <a class="nav-item" data-page="goals" href="#">
+        <span class="nav-icon"><i class="fa-solid fa-bullseye"></i></span>
+        <span class="nav-text">Goals</span>
+      </a>
+
+      <div class="nav-label" style="margin-top:8px;">AI Tools</div>
+      <a class="nav-item" data-page="ai" href="#">
+        <span class="nav-icon ai-glow"><i class="fa-solid fa-robot"></i></span>
+        <span class="nav-text">AI Assistant</span>
+        <span class="nav-badge">AI</span>
+      </a>
+
+      <div class="nav-label" style="margin-top:8px;">Account</div>
+      <a class="nav-item" href="#" id="exportNavBtn">
+        <span class="nav-icon"><i class="fa-solid fa-download"></i></span>
+        <span class="nav-text">Export CSV</span>
+      </a>
+      <a class="nav-item danger-item" href="#" id="logoutBtn">
+        <span class="nav-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+        <span class="nav-text">Sign Out</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- ════════════════════════════════════════════════════════ -->
+
+  <!-- ══ MAIN AREA ════════════════════════════════════════════ -->
+  <div class="main-area" id="mainArea">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="page-breadcrumb">
+          <span id="breadcrumbText">Dashboard</span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="month-selector">
+          <i class="fa-regular fa-calendar"></i>
+          <select id="monthFilter"></select>
+        </div>
+
+        <button class="topbar-btn" id="notifBtn" title="Notifications">
+          <i class="fa-regular fa-bell"></i>
+          <span class="notif-dot" id="notifDot" style="display:none;"></span>
+        </button>
+
+        <div class="profile-wrap">
+          <button class="profile-btn" id="profileBtn">
+            <div class="profile-avatar" id="topbarAvatar">U</div>
+            <div class="profile-info">
+              <span class="profile-name" id="topbarName">User</span>
+              <span class="profile-role">Personal Account</span>
+            </div>
+            <i class="fa-solid fa-chevron-down profile-chevron"></i>
+          </button>
+
+          <div class="profile-dropdown" id="profileDropdown" style="display:none;">
+            <div class="pd-header">
+              <div class="pd-avatar" id="pdAvatar">U</div>
+              <div>
+                <div class="pd-name" id="pdName">User</div>
+                <div class="pd-email" id="pdEmail">user@example.com</div>
+              </div>
+            </div>
+            <div class="pd-divider"></div>
+            <button class="pd-item" id="pdExport"><i class="fa-solid fa-download"></i> Export Data</button>
+            <div class="pd-divider"></div>
+            <button class="pd-item danger" id="pdLogout"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- PAGE: DASHBOARD                                        -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section class="page" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <h1>Hello, <span id="welcomeName">User</span> 👋</h1>
+          <p class="page-sub">Overview for <strong id="currentMonthLabel">this month</strong></p>
+        </div>
+        <div class="streak-chip" id="streakChip">
+          <span>🔥</span>
+          <strong id="streakCount">0</strong> Day Streak
+        </div>
+      </div>
+
+      <!-- Smart Insights Row -->
+      <div class="insights-row" id="insightsRow"><!-- JS populated --></div>
+
+      <!-- Summary Cards -->
+      <div class="summary-grid">
+        <div class="stat-card card-balance">
+          <div class="sc-top">
+            <span class="sc-label">Net Balance</span>
+            <div class="sc-icon-wrap blue"><i class="fa-solid fa-wallet"></i></div>
+          </div>
+          <div class="sc-value" id="totalBalance">₹0</div>
+          <div class="sc-delta" id="balanceDelta">All-time net</div>
+        </div>
+
+        <div class="stat-card card-income">
+          <div class="sc-top">
+            <span class="sc-label">Income</span>
+            <div class="sc-icon-wrap green"><i class="fa-solid fa-arrow-trend-up"></i></div>
+          </div>
+          <div class="sc-value positive" id="totalIncome">₹0</div>
+          <div class="sc-delta" id="incomeSub">This month</div>
+        </div>
+
+        <div class="stat-card card-expense">
+          <div class="sc-top">
+            <span class="sc-label">Expenses</span>
+            <div class="sc-icon-wrap red"><i class="fa-solid fa-arrow-trend-down"></i></div>
+          </div>
+          <div class="sc-value negative" id="totalExpense">₹0</div>
+          <div class="sc-delta" id="expenseSub">This month</div>
+        </div>
+
+        <div class="stat-card card-budget">
+          <div class="sc-top">
+            <span class="sc-label">Budget Status</span>
+            <div class="sc-icon-wrap gold"><i class="fa-solid fa-chart-pie"></i></div>
+          </div>
+          <div class="sc-value" id="budgetValue">Not Set</div>
+          <div class="budget-track">
+            <div class="budget-bar-track">
+              <div class="budget-bar-fill" id="budgetBarFill" style="width:0%"></div>
+            </div>
+            <div class="budget-stats">
+              <span id="budgetPct">0% used</span>
+              <span>Left: <strong id="budgetRemaining">–</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="fa-solid fa-chart-column"></i> Income vs Expenses</div>
+            <span class="card-badge">6 months</span>
+          </div>
+          <div class="chart-area"><canvas id="barChart"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div class="card-title"><i class="fa-solid fa-chart-pie"></i> Category Breakdown</div>
+          </div>
+          <div class="pie-area">
+            <canvas id="pieChart"></canvas>
+          </div>
+          <div class="chart-legend" id="pieLegend"></div>
+        </div>
+      </div>
+
+      <!-- Line Chart: Monthly Trend -->
+      <div class="card" style="margin-top:20px;">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-chart-line"></i> Savings Trend</div>
+          <span class="card-badge">Last 6 months</span>
+        </div>
+        <div class="chart-area" style="height:200px;"><canvas id="lineChart"></canvas></div>
+      </div>
+
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- PAGE: TRANSACTIONS                                     -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section class="page hidden" id="page-transactions">
+      <div class="page-header">
+        <div><h1>Transactions</h1><p class="page-sub">Manage all your income & expenses</p></div>
+        <button class="btn-primary-sm" id="addTxFab"><i class="fa-solid fa-plus"></i> Add New</button>
+      </div>
+
+      <!-- Add Transaction Card -->
+      <div class="card" id="addTxCard">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-plus"></i> Add Transaction</div>
+          <button class="card-close-btn" id="closeAddTx"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="card-body">
+          <div class="type-toggle" id="typeToggle">
+            <button class="type-btn active-income" data-type="income" id="incomeBtn">
+              <i class="fa-solid fa-plus"></i> Income
+            </button>
+            <button class="type-btn" data-type="expense" id="expenseBtn">
+              <i class="fa-solid fa-minus"></i> Expense
+            </button>
+          </div>
+
+          <form class="tx-form" id="txForm" novalidate>
+            <div class="form-row">
+              <div class="form-group full-width">
+                <label for="txDesc">Description</label>
+                <input type="text" id="txDesc" placeholder="e.g. Monthly Salary, Grocery…" />
+                <span class="form-error" id="txDescErr">Please enter a description.</span>
+              </div>
+              <div class="form-group">
+                <label for="txAmount">Amount (₹)</label>
+                <input type="number" id="txAmount" placeholder="0.00" min="0" step="0.01" />
+                <span class="form-error" id="txAmountErr">Enter a valid amount.</span>
+              </div>
+              <div class="form-group">
+                <label for="txDate">Date</label>
+                <input type="date" id="txDate" />
+              </div>
+              <div class="form-group full-width">
+                <label for="txCategory">Category</label>
+                <select id="txCategory">
+                  <option value="">Select category…</option>
+                  <option value="food">🍔 Food</option>
+                  <option value="shopping">🛍️ Shopping</option>
+                  <option value="travel">🚗 Travel</option>
+                  <option value="bills">💡 Bills</option>
+                  <option value="entertainment">🎬 Entertainment</option>
+                  <option value="health">🏥 Health</option>
+                  <option value="salary">💼 Salary</option>
+                  <option value="freelance">💻 Freelance</option>
+                  <option value="investment">📈 Investment</option>
+                  <option value="other">📦 Other</option>
+                </select>
+                <span class="form-error" id="txCatErr">Please select a category.</span>
+              </div>
+            </div>
+            <button type="submit" class="btn-submit" id="addTxBtn">
+              <i class="fa-solid fa-plus"></i> Add Transaction
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filter Row -->
+      <div class="tx-filter-bar">
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="txSearch" placeholder="Search transactions…" />
+        </div>
+        <div class="filter-pills">
+          <select class="filter-select" id="txFilter">
+            <option value="all">All Types</option>
+            <option value="income">Income Only</option>
+            <option value="expense">Expense Only</option>
+          </select>
+          <select class="filter-select" id="catFilter">
+            <option value="all">All Categories</option>
+            <option value="food">🍔 Food</option>
+            <option value="shopping">🛍️ Shopping</option>
+            <option value="travel">🚗 Travel</option>
+            <option value="bills">💡 Bills</option>
+            <option value="entertainment">🎬 Entertainment</option>
+            <option value="health">🏥 Health</option>
+            <option value="salary">💼 Salary</option>
+            <option value="freelance">💻 Freelance</option>
+            <option value="investment">📈 Investment</option>
+            <option value="other">📦 Other</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Budget Setup in Transactions Page -->
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-bullseye"></i> Monthly Budget</div>
+        </div>
+        <div class="card-body" style="padding:16px 20px;">
+          <div class="budget-form-row">
+            <input type="number" id="budgetInput" class="budget-input" placeholder="Set monthly budget (₹)" />
+            <button class="btn-primary-sm" id="setBudgetBtn">Update Budget</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-list-ul"></i> All Transactions</div>
+          <span class="tx-count-badge" id="txCountBadge">0 records</span>
+        </div>
+        <div id="txList" class="tx-list"></div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- PAGE: REPORTS                                          -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section class="page hidden" id="page-reports">
+      <div class="page-header">
+        <div><h1>Monthly Reports</h1><p class="page-sub">Detailed breakdown by month</p></div>
+        <button class="btn-primary-sm" id="exportReportBtn"><i class="fa-solid fa-download"></i> Export CSV</button>
+      </div>
+
+      <!-- Month Picker -->
+      <div class="report-month-pick card">
+        <div class="card-body" style="padding:16px 20px;">
+          <div class="rmp-row">
+            <span class="rmp-label"><i class="fa-regular fa-calendar"></i> Select Month</span>
+            <select id="reportMonthSel" class="filter-select" style="min-width:180px;"></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Stats -->
+      <div class="report-stats" id="reportStats">
+        <div class="report-stat">
+          <div class="rs-icon green"><i class="fa-solid fa-arrow-up"></i></div>
+          <div>
+            <div class="rs-label">Total Income</div>
+            <div class="rs-value positive" id="rpIncome">₹0</div>
+          </div>
+        </div>
+        <div class="report-stat">
+          <div class="rs-icon red"><i class="fa-solid fa-arrow-down"></i></div>
+          <div>
+            <div class="rs-label">Total Expenses</div>
+            <div class="rs-value negative" id="rpExpense">₹0</div>
+          </div>
+        </div>
+        <div class="report-stat">
+          <div class="rs-icon cyan"><i class="fa-solid fa-piggy-bank"></i></div>
+          <div>
+            <div class="rs-label">Net Savings</div>
+            <div class="rs-value" id="rpSavings">₹0</div>
+          </div>
+        </div>
+        <div class="report-stat">
+          <div class="rs-icon gold"><i class="fa-solid fa-receipt"></i></div>
+          <div>
+            <div class="rs-label">Transactions</div>
+            <div class="rs-value" id="rpCount">0</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Breakdown Table -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-table-cells"></i> Category Breakdown</div>
+        </div>
+        <div id="reportCategoryBreakdown" class="cat-breakdown"></div>
+      </div>
+
+      <!-- Transactions in This Month -->
+      <div class="card" style="margin-top:16px;">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-list"></i> Transactions This Month</div>
+        </div>
+        <div id="reportTxList" class="tx-list"></div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- PAGE: GOALS                                            -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section class="page hidden" id="page-goals">
+      <div class="page-header">
+        <div><h1>Savings Goals</h1><p class="page-sub">Track your financial milestones</p></div>
+      </div>
+
+      <!-- Add Goal Card -->
+      <div class="card goal-setup-card">
+        <div class="card-head">
+          <div class="card-title"><i class="fa-solid fa-plus"></i> Set / Update Goal</div>
+        </div>
+        <div class="card-body" style="padding:16px 20px;">
+          <div class="goal-form-row">
+            <div class="form-group" style="flex:1;">
+              <label>Goal Name</label>
+              <input type="text" id="goalNameInput" placeholder="e.g. Emergency Fund, New Laptop…" />
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label>Target Amount (₹)</label>
+              <input type="number" id="goalAmountInput" placeholder="e.g. 50000" min="0" />
+            </div>
+            <div class="form-group" style="flex:1;">
+              <label>Current Savings (₹)</label>
+              <input type="number" id="goalSavedInput" placeholder="e.g. 15000" min="0" />
+            </div>
+            <button class="btn-primary-sm" id="setGoalBtn" style="align-self:flex-end;height:44px;">Save Goal</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Goal Cards Grid -->
+      <div class="goals-grid" id="goalsGrid">
+        <!-- JS Populated -->
+      </div>
+
+      <!-- Tips Section -->
+      <div class="card tips-card" style="margin-top:20px;">
+        <div class="card-head"><div class="card-title"><i class="fa-solid fa-lightbulb"></i> Saving Tips</div></div>
+        <div class="tips-grid">
+          <div class="tip-item"><span class="tip-emoji">🎯</span><div><strong>50/30/20 Rule</strong><p>Allocate 50% needs, 30% wants, 20% savings every month.</p></div></div>
+          <div class="tip-item"><span class="tip-emoji">📱</span><div><strong>Auto-transfer</strong><p>Set automatic transfers to savings on salary day.</p></div></div>
+          <div class="tip-item"><span class="tip-emoji">✂️</span><div><strong>Cut Subscriptions</strong><p>Audit monthly subscriptions — cancel ones you don't use.</p></div></div>
+          <div class="tip-item"><span class="tip-emoji">🛒</span><div><strong>Shop with a List</strong><p>Reduce impulse purchases by shopping with a strict list.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ────────────────────────────────────────────────────── -->
+    <!-- PAGE: AI ASSISTANT                                     -->
+    <!-- ────────────────────────────────────────────────────── -->
+    <section class="page hidden" id="page-ai">
+      <div class="page-header">
+        <div><h1>AI Financial Assistant</h1><p class="page-sub">Ask anything about your finances</p></div>
+        <div class="ai-status-badge"><span class="ai-pulse"></span> AI Online</div>
+      </div>
+
+      <div class="ai-layout">
+        <!-- Chat Panel -->
+        <div class="chat-panel card">
+          <div class="chat-header">
+            <div class="chat-bot-info">
+              <div class="bot-avatar">🤖</div>
+              <div>
+                <div class="bot-name">FinBot</div>
+                <div class="bot-desc">MoneyMate AI · Powered by Claude</div>
+              </div>
+            </div>
+            <button class="chat-clear-btn" id="chatClearBtn" title="Clear chat">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+
+          <div class="chat-messages" id="chatMessages">
+            <!-- JS Populated with welcome message -->
+          </div>
+
+          <div class="chat-suggestions" id="chatSuggestions">
+            <button class="chat-chip" data-msg="How to save money?">💰 How to save money?</button>
+            <button class="chat-chip" data-msg="How to reduce food expenses?">🍔 Reduce food expenses</button>
+            <button class="chat-chip" data-msg="How to manage budget?">📊 Budget tips</button>
+            <button class="chat-chip" data-msg="Analyze my spending">🔍 Analyze my spending</button>
+            <button class="chat-chip" data-msg="Investment tips for beginners">📈 Investment tips</button>
+          </div>
+
+          <div class="chat-input-row">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Ask FinBot anything about finance…" />
+            <button class="chat-send-btn" id="chatSendBtn">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- AI Insights Sidebar -->
+        <div class="ai-sidebar">
+          <div class="card">
+            <div class="card-head"><div class="card-title"><i class="fa-solid fa-brain"></i> Smart Insights</div></div>
+            <div id="aiInsightsList" class="ai-insights-list"></div>
+          </div>
+
+          <div class="card" style="margin-top:16px;">
+            <div class="card-head"><div class="card-title"><i class="fa-solid fa-chart-simple"></i> Quick Stats</div></div>
+            <div class="quick-stats" id="aiQuickStats"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div> <!-- end main-area -->
+</div> <!-- end app-shell -->
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="home.js"></script>
+</body>
+</html>
